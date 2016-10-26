@@ -43,6 +43,11 @@ function addUser(name, address, email, age, status) {
   return usr;
 }
 
+function removeUser(id) {
+  const ind = users.indexOf(u => u.id === id);
+  users.splice(ind, 1);
+}
+
 function getUser(id) {
   return users.find(u => u.id === id);
 }
@@ -60,5 +65,6 @@ export {
   addUser,
   getUser,
   getUsers,
-  getAdmin
+  getAdmin,
+  removeUser
 };

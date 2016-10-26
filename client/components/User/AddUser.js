@@ -20,7 +20,6 @@ export default class AddUser extends React.Component {
   }
 
   addUser() {
-    console.log('state', this.state);
     const addUserMutation = new AddUserMutation({ viewerId: this.props.viewer.id, ...this.state });
     Relay.Store.commitUpdate(addUserMutation);
   }

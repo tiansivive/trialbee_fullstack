@@ -28,7 +28,8 @@ import {
   User,
   getUser,
   getUsers,
-  addUser
+  addUser,
+  removeUser
 } from './database';
 
 
@@ -142,6 +143,28 @@ const addUserMutation = mutationWithClientMutationId({
   mutateAndGetPayload: ({ name, address, email, status, age }) => addUser(name, address, email, age, status)
 });
 
+const removeUserMutation = mutationWithClientMutationId({
+  name: 'RemoveUser',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  outputFields: {
+    viewer: {
+      type: adminType,
+      resolve: () => getAdmin(0),
+    },
+    deletedId: {
+      type: GraphQLID,
+      resolve: ({ id }) => id,
+    },
+  },
+  mutateAndGetPayload: ({ id }) => {
+    const { id: usrID } = fromGlobalId(id);
+    removeUser(usrID);
+    return { id };
+  },
+});
+
 
 /**
  * This is the type that will be the root of our query,
@@ -166,7 +189,8 @@ const queryType = new GraphQLObjectType({
 const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    addUser: addUserMutation
+    addUser: addUserMutation,
+    removeUser: removeUserMutation
     // Add your own mutations here
   })
 });

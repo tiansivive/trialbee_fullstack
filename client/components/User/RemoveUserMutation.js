@@ -10,14 +10,14 @@ class RemoveUserMutation extends Relay.Mutation {
 
   getVariables() {
     return {
-      id: this.props.userID
+      id: this.props.user.id
     };
   }
 
   getFatQuery() {
     return Relay.QL`
-      fragment on AddUserPayload {
-        userEdge,
+      fragment on RemoveUserPayload {
+        deletedId
         viewer { users }
       }
     `;
@@ -25,14 +25,11 @@ class RemoveUserMutation extends Relay.Mutation {
 
   getConfigs() {
     return [{
-      type: 'RANGE_ADD',
+      type: 'NODE_DELETE',
       parentName: 'viewer',
-      parentID: this.props.viewerId,
+      parentID: this.props.viewer.id,
       connectionName: 'users',
-      edgeName: 'userEdge',
-      rangeBehaviors: {
-        '': 'append',
-      },
+      deletedIDFieldName: 'deletedId'
     }];
   }
 }
