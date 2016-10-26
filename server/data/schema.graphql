@@ -1,0 +1,96 @@
+input AddUserInput {
+  name: String!
+  address: String!
+  email: String!
+  status: String!
+  age: Int!
+  clientMutationId: String
+}
+
+type AddUserPayload {
+  userEdge: UserEdge
+  viewer: Admin
+  clientMutationId: String
+}
+
+# The administrator who uses the app
+type Admin implements Node {
+  # The ID of an object
+  id: ID!
+
+  # User list
+  users(after: String, first: Int, before: String, last: Int): UserConnection
+}
+
+type Mutation {
+  addUser(input: AddUserInput!): AddUserPayload
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+type Query {
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
+  viewer: Admin
+}
+
+# The users that are managed
+type User implements Node {
+  # The ID of an object
+  id: ID!
+
+  # Users's name
+  name: String
+
+  # User's address
+  address: String
+
+  # Users's email
+  email: String
+
+  # Users's age
+  age: Int
+
+  # Users's current status
+  status: String
+}
+
+# A connection to a list of items.
+type UserConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [UserEdge]
+}
+
+# An edge in a connection.
+type UserEdge {
+  # The item at the end of the edge
+  node: User
+
+  # A cursor for use in pagination
+  cursor: String!
+}
