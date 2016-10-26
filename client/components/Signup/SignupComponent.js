@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Cell, Textfield, Button } from 'react-mdl';
-import Page from '../Page/PageComponent';
+import Page from '../Page/Page';
 
 export default class Signup extends React.Component {
   render() {

@@ -10,9 +10,7 @@ export default class Page extends React.Component {
   render() {
     return (
       <div>
-        <h1 className={styles.heading}>
-          {this.props.heading}
-        </h1>
+        <h1 className={styles.heading}> {this.props.heading} </h1>
         <hr />
         {this.props.children}
       </div>
