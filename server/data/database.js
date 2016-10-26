@@ -31,10 +31,21 @@ const users = [
 ];
 
 
+function checkString(id) {
+  if (typeof id === 'number') {
+    return id;
+  } else if (typeof usrID === 'string') {
+    return parseInt(id, 10);
+  }
+  console.log('on CHECKING mothafucka', id);
+  throw new Error('ID is not STRING nor NUMBER');
+}
+
 /*
 * Add feature in memory
 */
 
+/* eslint-disable eqeqeq */
 let currentUsers = 10;
 function addUser(name, address, email, age, status) {
   const usr = new User(++currentUsers, name, address, email, age, status);
@@ -44,12 +55,30 @@ function addUser(name, address, email, age, status) {
 }
 
 function removeUser(id) {
-  const ind = users.indexOf(u => u.id === id);
+  let ind;
+
+  users.forEach((u, i) => {
+    if (u.id == id) ind = i;
+  });
+
   users.splice(ind, 1);
 }
 
+function editUser(id, name, address, email, status, age) {
+  let ind;
+  users.forEach((u, i) => {
+    if (u.id == id) ind = i;
+  });
+
+  users[ind].name = name;
+  users[ind].address = address;
+  users[ind].status = status;
+  users[ind].email = email;
+  users[ind].age = age;
+}
+
 function getUser(id) {
-  return users.find(u => u.id === id);
+  return users.find(u => u.id == id);
 }
 
 function getUsers() {
@@ -57,14 +86,15 @@ function getUsers() {
 }
 
 function getAdmin(id) {
-  return id === admin.id ? admin : null;
+  return id == admin.id ? admin : null;
 }
 
-
+/* eslint-enable */
 export {
   addUser,
   getUser,
   getUsers,
   getAdmin,
-  removeUser
+  removeUser,
+  editUser
 };

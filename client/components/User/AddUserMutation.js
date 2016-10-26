@@ -31,11 +31,11 @@ class AddUserMutation extends Relay.Mutation {
     return [{
       type: 'RANGE_ADD',
       parentName: 'viewer',
-      parentID: this.props.viewerId,
+      parentID: this.props.viewer.id,
       connectionName: 'users',
       edgeName: 'userEdge',
       rangeBehaviors: {
-        '': 'append',
+        '': 'prepend',
       },
     }];
   }

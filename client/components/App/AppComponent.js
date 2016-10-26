@@ -1,16 +1,15 @@
 import React from 'react';
+import Relay from 'react-relay';
+
 import 'normalize.css/normalize.css';
 import 'react-mdl/extra/css/material.cyan-red.min.css';
 
-import Footer from '../Footer/FooterContainer';
-import AddUser from '../User/AddUser';
 
+import AddUser from '../User/AddUser';
 import styles from './App.scss';
 
 
-
-
-export default class App extends React.Component {
+class App extends React.Component {
   static propTypes = {
     children: React.PropTypes.object.isRequired,
     viewer: React.PropTypes.object.isRequired
@@ -23,8 +22,18 @@ export default class App extends React.Component {
           <AddUser viewer={this.props.viewer} />
           {this.props.children}
         </div>
-        <Footer viewer={this.props.viewer} />
       </div>
     );
   }
 }
+
+export default Relay.createContainer(App, {
+  fragments: {
+    viewer: () => Relay.QL`
+      fragment on Admin {
+        id
+      }`
+  }
+});
+
+

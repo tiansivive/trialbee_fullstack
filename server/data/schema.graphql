@@ -22,9 +22,25 @@ type Admin implements Node {
   users(after: String, first: Int, before: String, last: Int): UserConnection
 }
 
+input EditUserInput {
+  id: ID!
+  name: String!
+  address: String!
+  email: String!
+  status: String!
+  age: Int!
+  clientMutationId: String
+}
+
+type EditUserPayload {
+  user: User
+  clientMutationId: String
+}
+
 type Mutation {
   addUser(input: AddUserInput!): AddUserPayload
   removeUser(input: RemoveUserInput!): RemoveUserPayload
+  editUser(input: EditUserInput!): EditUserPayload
 }
 
 # An object with an ID

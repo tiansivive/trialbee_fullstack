@@ -29,7 +29,8 @@ import {
   getUser,
   getUsers,
   addUser,
-  removeUser
+  removeUser,
+  editUser
 } from './database';
 
 
@@ -123,7 +124,7 @@ const addUserMutation = mutationWithClientMutationId({
     address: { type: new GraphQLNonNull(GraphQLString) },
     email: { type: new GraphQLNonNull(GraphQLString) },
     status: { type: new GraphQLNonNull(GraphQLString) },
-    age: { type: new GraphQLNonNull(GraphQLInt) },
+    age: { type: new GraphQLNonNull(GraphQLInt) }
   },
 
   outputFields: {
@@ -151,17 +152,41 @@ const removeUserMutation = mutationWithClientMutationId({
   outputFields: {
     viewer: {
       type: adminType,
-      resolve: () => getAdmin(0),
+      resolve: () => getAdmin(0)
     },
     deletedId: {
       type: GraphQLID,
-      resolve: ({ id }) => id,
-    },
+      resolve: ({ id }) => id
+    }
   },
   mutateAndGetPayload: ({ id }) => {
     const { id: usrID } = fromGlobalId(id);
     removeUser(usrID);
     return { id };
+  },
+});
+
+const editUserMutation = mutationWithClientMutationId({
+  name: 'EditUser',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    address: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    status: { type: new GraphQLNonNull(GraphQLString) },
+    age: { type: new GraphQLNonNull(GraphQLInt) }
+  },
+  outputFields: {
+    user: {
+      type: userType,
+      resolve: ({ usrID }) => getUser(usrID)
+    }
+  },
+  mutateAndGetPayload: ({ id, name, address, email, status, age }) => {
+    const { id: usrID } = fromGlobalId(id);
+
+    editUser(usrID, name, address, email, status, age);
+    return { usrID };
   },
 });
 
@@ -190,7 +215,8 @@ const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     addUser: addUserMutation,
-    removeUser: removeUserMutation
+    removeUser: removeUserMutation,
+    editUser: editUserMutation
     // Add your own mutations here
   })
 });

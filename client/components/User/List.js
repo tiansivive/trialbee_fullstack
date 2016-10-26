@@ -23,7 +23,7 @@ class List extends React.Component {
       }
 
       return (
-        <User key={usr.id} data={usr} viewer={this.props.viewer} />
+        <User key={usr.id} viewer={this.props.viewer} user={usr} />
       );
     });
 
