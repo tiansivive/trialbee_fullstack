@@ -27,7 +27,7 @@ const users = [
   new User(7, 'Littlefinger', 'Eyrie', 'peter@got.hbo', 34, 'Who knows?'),
   new User(8, 'Tyrion', 'Travelling Cart', 'tyrion@got.hbo', 30, 'Depressed'),
   new User(9, 'Varys', 'Shadows', 'varys@got.hbo', 36, 'Unknown'),
-  new User(10, 'Daenerys', 'Flying about', 'danny@got.hbo', 30, 'Killing khals')
+  new User(10, 'Daenerys', 'Flying about', 'danny@got.hbo', 22, 'Killing khals')
 ];
 
 

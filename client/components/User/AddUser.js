@@ -1,59 +1,42 @@
 import React from 'react';
 import Relay from 'react-relay';
-import Dropdown from 'react-dropdown';
-import { Grid, Cell, Button } from 'react-mdl';
-import Page from '../Page/PageComponent';
+
+import { Button } from 'react-mdl';
+import Page from '../Page/Page';
 import AddUserMutation from './AddUserMutation';
 
-const options = [
-  { value: 'none', label: 'Please select a user' },
-  { value: 'Cersei', label: 'Cersei' },
-  { value: 'Theon', label: 'Theon' },
-  { value: 'Margaery', label: 'Margaery' },
-];
-
-const inputData = {
-  Cersei: { name: 'Cersei', address: 'King\'s Landing', email: 'cersei@got.hbo', age: 39, status: 'Scheming and Manipulating' },
-  html: { name: 'Theon', address: 'Boat', email: 'theon@got.hbo', age: 20, status: 'Invading Westeros' },
-  css: { name: 'Margaery', address: 'Under the temple\'s rubble', email: 'margaery@got.hbo', age: 32, status: 'dead' }
-};
 
 export default class AddUser extends React.Component {
   static propTypes = {
     viewer: React.PropTypes.object.isRequired
   };
 
-  state = {
-    form: {
-      dropdown: options[0]
-    }
+  state = {};
+
+  onChange(e) {
+    const obj = {};
+    obj[e.target.id] = e.target.value;
+    this.setState(obj);
   }
 
-  onSelect = (e) => {
-    this.setState({ form: { dropdown: e } });
-  }
-
-  addUser = () => {
-    const value = this.state.form.dropdown.value;
-    if (value === 'none') {
-      return;
-    }
-
-    const addUserMutation = new AddUserMutation({ viewerId: this.props.viewer.id, ...inputData[value] });
+  addUser() {
+    console.log('state', this.state);
+    const addUserMutation = new AddUserMutation({ viewerId: this.props.viewer.id, ...this.state });
     Relay.Store.commitUpdate(addUserMutation);
   }
 
   render() {
     return (
-      <Page heading='Add a Feature'>
-        <Grid>
-          <Cell col={9}>
-            <Dropdown options={options} onChange={this.onSelect.bind(this)} value={this.state.form.dropdown} />
-          </Cell>
-          <Cell col={3} style={{ textAlign: 'center' }}>
-            <Button raised accent onClick={this.addUser.bind(this)}>Add User</Button>
-          </Cell>
-        </Grid>
+      <Page heading='Add a User'>
+        <div>
+          <input id='name' type='text' placeholder='Name' value={this.state.name} onChange={this.onChange.bind(this)} required />
+          <input id='status' type='text' placeholder='Status' value={this.state.status} onChange={this.onChange.bind(this)} required />
+          <input id='age' type='number' placeholder='Age' value={this.state.age} onChange={this.onChange.bind(this)} required />
+          <input id='address' type='text' placeholder='Address' value={this.state.address} onChange={this.onChange.bind(this)} required />
+          <input id='email' type='text' placeholder='Email' value={this.state.email} onChange={this.onChange.bind(this)} required />
+          <input id='image' type='text' placeholder='Image URL' value={this.state.image} onChange={this.onChange.bind(this)} required />
+          <Button raised onClick={this.addUser.bind(this)}>Add</Button>
+        </div>
       </Page>
     );
   }

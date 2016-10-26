@@ -1,20 +1,16 @@
 import Relay from 'react-relay';
 
-class AddUserMutation extends Relay.Mutation {
+class RemoveUserMutation extends Relay.Mutation {
 
   getMutation() {
     return Relay.QL`
-      mutation { addUser }
+      mutation { removeUser }
     `;
   }
 
   getVariables() {
     return {
-      name: this.props.name,
-      address: this.props.address,
-      email: this.props.email,
-      status: this.props.status,
-      age: parseInt(this.props.age, 10)
+      id: this.props.userID
     };
   }
 
@@ -41,4 +37,4 @@ class AddUserMutation extends Relay.Mutation {
   }
 }
 
-export default AddUserMutation;
+export default RemoveUserMutation;

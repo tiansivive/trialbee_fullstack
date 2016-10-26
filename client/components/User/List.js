@@ -1,10 +1,11 @@
 /* eslint-disable global-require */
 import React from 'react';
 import Relay from 'react-relay';
-import { Grid } from 'react-mdl';
 
 import User from './User';
 import Page from '../Page/Page';
+
+import styles from './List.scss';
 
 
 class List extends React.Component {
@@ -15,7 +16,12 @@ class List extends React.Component {
   render() {
     const arr = this.props.viewer.users.edges.map((edge) => {
       const usr = edge.node;
-      usr.image = require(`../../assets/${usr.name.toLowerCase()}.png`);
+      try {
+        usr.image = require(`../../assets/${usr.name.toLowerCase()}.png`);
+      } catch (e) {
+        usr.image = 'http://cdn.playbuzz.com/cdn/30021037-fba5-48e2-882d-a1aa8556e630/0861e162-3adb-4a10-bba7-f9d761694770.png';
+      }
+
       return (
         <User key={usr.id} data={usr} />
       );
@@ -23,7 +29,7 @@ class List extends React.Component {
 
     return (
       <Page heading='Users'>
-        <Grid>{arr}</Grid>
+        <ul className={styles.list}>{arr}</ul>
       </Page>
     );
   }

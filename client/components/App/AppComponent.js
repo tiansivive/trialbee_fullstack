@@ -1,10 +1,14 @@
 import React from 'react';
 import 'normalize.css/normalize.css';
 import 'react-mdl/extra/css/material.cyan-red.min.css';
-import Navbar from '../Navbar/NavbarComponent';
+
 import Footer from '../Footer/FooterContainer';
+import AddUser from '../User/AddUser';
+
 import styles from './App.scss';
-import yeoman from '../../assets/yeoman.png';
+
+
+
 
 export default class App extends React.Component {
   static propTypes = {
@@ -15,13 +19,8 @@ export default class App extends React.Component {
   render() {
     return (
       <div className={styles.root}>
-        <Navbar />
-        <div className={styles.greeting}>
-          <h1 className={styles.sawasdee}>Sawasdee, Sawasdee!</h1>
-          <p>Always a pleasure scaffolding your apps</p>
-          <img src={yeoman} alt='yeoman' />
-        </div>
         <div className={styles.content}>
+          <AddUser viewer={this.props.viewer} />
           {this.props.children}
         </div>
         <Footer viewer={this.props.viewer} />

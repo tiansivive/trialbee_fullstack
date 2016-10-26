@@ -6,6 +6,7 @@ export default Relay.createContainer(App, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on Admin {
+        id
         ${Footer.getFragment('viewer')}
       }`
   }
