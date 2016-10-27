@@ -4,6 +4,7 @@ input AddUserInput {
   email: String!
   status: String!
   age: Int!
+  image: String!
   clientMutationId: String
 }
 
@@ -19,7 +20,7 @@ type Admin implements Node {
   id: ID!
 
   # User list
-  users(after: String, first: Int, before: String, last: Int): UserConnection
+  users(order: Order = {}, match: Match = {}, after: String, first: Int, before: String, last: Int): UserConnection
 }
 
 input EditUserInput {
@@ -37,6 +38,14 @@ type EditUserPayload {
   clientMutationId: String
 }
 
+input Match {
+  age: Int
+  name: String
+  address: String
+  email: String
+  status: String
+}
+
 type Mutation {
   addUser(input: AddUserInput!): AddUserPayload
   removeUser(input: RemoveUserInput!): RemoveUserPayload
@@ -47,6 +56,12 @@ type Mutation {
 interface Node {
   # The id of the object.
   id: ID!
+}
+
+input Order {
+  field: String
+  direction: String
+  baseline: String
 }
 
 # Information about pagination in a connection.
@@ -103,6 +118,9 @@ type User implements Node {
 
   # Users's current status
   status: String
+
+  # Users's image url
+  image: String
 }
 
 # A connection to a list of items.

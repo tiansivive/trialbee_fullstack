@@ -30,27 +30,18 @@ const users = [
   new User(10, 'Daenerys', 'Flying about', 'danny@got.hbo', 22, 'Killing khals')
 ];
 
-
-function checkString(id) {
-  if (typeof id === 'number') {
-    return id;
-  } else if (typeof usrID === 'string') {
-    return parseInt(id, 10);
-  }
-  console.log('on CHECKING mothafucka', id);
-  throw new Error('ID is not STRING nor NUMBER');
-}
-
 /*
 * Add feature in memory
 */
 
 /* eslint-disable eqeqeq */
 let currentUsers = 10;
-function addUser(name, address, email, age, status) {
+function addUser(name, address, email, age, status, imageUrl) {
   const usr = new User(++currentUsers, name, address, email, age, status);
-  users.push(usr);
 
+  if (imageUrl) usr.image = imageUrl;
+
+  users.push(usr);
   return usr;
 }
 
@@ -77,12 +68,42 @@ function editUser(id, name, address, email, status, age) {
   users[ind].age = age;
 }
 
-function getUser(id) {
-  return users.find(u => u.id == id);
+function filter(arr, key, val) {
+  const usrs = [];
+  console.log('key', key, 'val', val);
+  arr.forEach((elem) => {
+    if (key === 'age') {
+      if (val >= elem[key]) usrs.push(elem);
+      else return;
+    } else if (elem[key] && elem[key].match(val)) {
+      usrs.push(elem);
+    } else return;
+  });
+  return usrs;
 }
 
-function getUsers() {
+function getUsers(order) {
+  if (!order) return users;
+
+  let a = -1;
+  let b = 1;
+
+  if (order.direction && order.direction == 'DESC') {
+    a = 1;
+    b = -1;
+  }
+
+  users.sort((first, second) => {
+    if (first[order.field] < second[order.field]) return a;
+    if (first[order.field] > second[order.field]) return b;
+    return 0;
+  });
+
   return users;
+}
+
+function getUser(id) {
+  return users.find(u => u.id == id);
 }
 
 function getAdmin(id) {
@@ -96,5 +117,6 @@ export {
   getUsers,
   getAdmin,
   removeUser,
-  editUser
+  editUser,
+  filter
 };

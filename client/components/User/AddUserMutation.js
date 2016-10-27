@@ -14,7 +14,8 @@ class AddUserMutation extends Relay.Mutation {
       address: this.props.address,
       email: this.props.email,
       status: this.props.status,
-      age: parseInt(this.props.age, 10)
+      age: parseInt(this.props.age, 10),
+      image: this.props.image
     };
   }
 

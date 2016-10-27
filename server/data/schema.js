@@ -8,7 +8,8 @@ import {
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
-  GraphQLString
+  GraphQLString,
+  GraphQLInputObjectType
 } from 'graphql';
 
 import {
@@ -30,7 +31,8 @@ import {
   getUsers,
   addUser,
   removeUser,
-  editUser
+  editUser,
+  filter
 } from './database';
 
 
@@ -64,16 +66,59 @@ const { nodeInterface, nodeField } = nodeDefinitions(
  * Define your own types here
  */
 
+const orderParamType = new GraphQLInputObjectType({
+  name: 'Order',
+  fields: {
+    field: { type: GraphQLString },
+    direction: { type: GraphQLString },
+    baseline: { type: GraphQLString }
+  }
+});
+
+const matchParamType = new GraphQLInputObjectType({
+  name: 'Match',
+  fields: {
+    age: { type: GraphQLInt },
+    name: { type: GraphQLString },
+    address: { type: GraphQLString },
+    email: { type: GraphQLString },
+    status: { type: GraphQLString }
+  }
+});
+
+
 const adminType = new GraphQLObjectType({
   name: 'Admin',
   description: 'The administrator who uses the app',
   fields: () => ({
     id: globalIdField('Admin'),
     users: {
-      type: userConnection,
       description: 'User list',
-      args: connectionArgs,
-      resolve: (_, args) => connectionFromArray(getUsers(), args)
+      type: userConnection,
+      args: {
+        order: {
+          type: orderParamType,
+          defaultValue: {},
+        },
+        match: {
+          type: matchParamType,
+          defaultValue: {},
+        },
+        ...connectionArgs,
+      },
+      resolve: (_, { order, match, ...args }) => {
+        let users;
+        if (order.field && order.direction) {
+          users = getUsers(order);
+        } else users = getUsers();
+
+        console.log('order', order, 'match', match);
+        Object.keys(match).forEach((key) => {
+          if (match[key] && match[key] !== '') users = filter(users, key, match[key]);
+        });
+
+        return connectionFromArray(users, args);
+      }
     }
   }),
   interfaces: [nodeInterface]
@@ -103,6 +148,10 @@ const userType = new GraphQLObjectType({
     status: {
       type: GraphQLString,
       description: 'Users\'s current status'
+    },
+    image: {
+      type: GraphQLString,
+      description: 'Users\'s image url'
     }
   }),
   interfaces: [nodeInterface]
@@ -124,7 +173,8 @@ const addUserMutation = mutationWithClientMutationId({
     address: { type: new GraphQLNonNull(GraphQLString) },
     email: { type: new GraphQLNonNull(GraphQLString) },
     status: { type: new GraphQLNonNull(GraphQLString) },
-    age: { type: new GraphQLNonNull(GraphQLInt) }
+    age: { type: new GraphQLNonNull(GraphQLInt) },
+    image: { type: new GraphQLNonNull(GraphQLString) }
   },
 
   outputFields: {
@@ -141,7 +191,7 @@ const addUserMutation = mutationWithClientMutationId({
     }
   },
 
-  mutateAndGetPayload: ({ name, address, email, status, age }) => addUser(name, address, email, age, status)
+  mutateAndGetPayload: ({ name, address, email, status, age, image }) => addUser(name, address, email, age, status, image)
 });
 
 const removeUserMutation = mutationWithClientMutationId({
