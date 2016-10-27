@@ -2,8 +2,11 @@
 
   display: flex;
   flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-around;
 
   input{
+    flex: 30%;
     min-width: 100px;
     padding: 12px 20px;
     margin: 8px 0;
