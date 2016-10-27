@@ -1,4 +1,4 @@
-# React Component Assignment
+# React fullstack Assignment
 
 **Instructions**
 
