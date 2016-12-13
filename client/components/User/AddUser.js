@@ -13,7 +13,7 @@ export default class AddUser extends React.Component {
     viewer: React.PropTypes.object.isRequired
   };
 
-  state = {};
+  state = {name, status, age, address, email, image};
 
   onChange(e) {
     const obj = {};
